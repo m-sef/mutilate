@@ -127,6 +127,18 @@ public:
     D("GPareto(loc=%f, scale=%f, shape=%f)", loc, scale, shape);
   }
 
+  /* YA */
+  virtual double get_shape() {
+    //printf("%f %f \n", scale, shape);
+    return shape;
+  }
+
+  /* YA */
+  virtual void increment_shape(int val) {
+    shape = shape + val;
+  }
+
+
   virtual double generate(double U = -1.0) {
     if (U < 0.0) U = drand48();
     return loc + scale * (pow(U, -shape) - 1) / shape;

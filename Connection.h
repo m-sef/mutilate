@@ -40,6 +40,13 @@ public:
   ConnectionStats stats;
   options_t options;
 
+  /* YA */
+  int num_reqs;
+  double time_passed;
+  double get_ia_shape() { return ((GPareto *)iagen)->get_shape(); };
+  void increment_ia_shape(int val) { ((GPareto *)iagen)->increment_shape(val); }
+
+
   bool is_ready() { return read_state == IDLE; }
   void set_priority(int pri);
 

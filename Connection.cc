@@ -22,7 +22,7 @@
 Connection::Connection(struct event_base* _base, struct evdns_base* _evdns,
                        string _hostname, string _port, options_t _options,
                        bool sampling) :
-  start_time(0), stats(sampling), options(_options),
+  start_time(0), num_reqs(0), time_passed(0.0), stats(sampling), options(_options),
   hostname(_hostname), port(_port), base(_base), evdns(_evdns)
 {
   valuesize = createGenerator(options.valuesize);
@@ -293,7 +293,9 @@ void Connection::drive_write_machine(double now) {
   double delay;
   struct timeval tv;
 
-  if (check_exit_condition(now)) return;
+  if (check_exit_condition(now)) {
+	  return;
+  }
 
   while (1) {
     switch (write_state) {
@@ -326,7 +328,20 @@ void Connection::drive_write_machine(double now) {
       issue_something(now);
       last_tx = now;
       stats.log_op(op_queue.size());
-      next_time += iagen->generate();
+      delay = iagen->generate();
+      next_time += delay;
+      time_passed += delay;
+
+      /* YA */
+//      printf("%f\n", delay);
+      if (num_reqs > 50000) {
+	  printf("%f - %f\n", time_passed, get_ia_shape());
+	  num_reqs = 0;
+	  time_passed = 0;
+	  increment_ia_shape(-3);
+      } else {
+	      num_reqs += 1;
+      }
 
       if (options.skip && options.lambda > 0.0 &&
           now - next_time > 0.005000 &&
