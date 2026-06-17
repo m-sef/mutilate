@@ -22,7 +22,8 @@
 Connection::Connection(struct event_base* _base, struct evdns_base* _evdns,
                        string _hostname, string _port, options_t _options,
                        bool sampling) :
-  start_time(0), num_reqs(0), time_passed(0.0), stats(sampling), options(_options),
+  start_time(0), stats(sampling), options(_options),
+  time_stats(0.0), time_period(0.0), time_init(0.0), time_now(0.0), qps_prev(0.0),
   hostname(_hostname), port(_port), base(_base), evdns(_evdns)
 {
   valuesize = createGenerator(options.valuesize);
@@ -330,18 +331,26 @@ void Connection::drive_write_machine(double now) {
       stats.log_op(op_queue.size());
       delay = iagen->generate();
       next_time += delay;
-      time_passed += delay;
+      time_stats += delay;
+      time_period += delay;
+      time_init += delay;
+      time_now += delay;
 
       /* YA */
-//      printf("%f\n", delay);
-      if (num_reqs > 50000) {
-	  printf("%f - %f\n", time_passed, get_ia_shape());
-	  num_reqs = 0;
-	  time_passed = 0;
-	  increment_ia_shape(-3);
-      } else {
-	      num_reqs += 1;
+      /* IF AGENT */
+//      if (time_stats > 3) { /* print stats every 3 seconds */
+//	      double qps_now = (stats.sets + stats.gets) / time_now;
+//	      printf("%f %f\n", time_now, qps_now);
+//	      time_stats = 0;
+//	      qps_prev = qps_now;
+//      }
+      /* IF LEADER */
+      if (time_stats > 3) { /* print stats every 3 seconds */
+	      double lat_now = stats.get_nth(99);
+	      printf("%f %f\n", time_now, lat_now);
+	      time_stats = 0;
       }
+
 
       if (options.skip && options.lambda > 0.0 &&
           now - next_time > 0.005000 &&

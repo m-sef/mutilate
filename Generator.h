@@ -128,15 +128,17 @@ public:
   }
 
   /* YA */
+  virtual double get_ia_lambda() {
+    return (1 - shape) / (scale + (1 - shape) * loc);
+  }
   virtual double get_shape() {
     //printf("%f %f \n", scale, shape);
     return shape;
   }
-
-  /* YA */
   virtual void increment_shape(int val) {
     shape = shape + val;
   }
+  /* YA */
 
 
   virtual double generate(double U = -1.0) {
