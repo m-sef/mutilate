@@ -22,7 +22,8 @@
 Connection::Connection(struct event_base* _base, struct evdns_base* _evdns,
                        string _hostname, string _port, options_t _options,
                        bool sampling) :
-  start_time(0), num_reqs(0), time_passed(0.0), stats(sampling), options(_options),
+  start_time(0), stats(sampling), options(_options),
+  time_stats(0.0), time_period(0.0), time_init(0.0), time_now(0.0), qps_prev(0.0), prev_nops(0),
   hostname(_hostname), port(_port), base(_base), evdns(_evdns)
 {
   valuesize = createGenerator(options.valuesize);
@@ -330,18 +331,37 @@ void Connection::drive_write_machine(double now) {
       stats.log_op(op_queue.size());
       delay = iagen->generate();
       next_time += delay;
-      time_passed += delay;
 
       /* YA */
-//      printf("%f\n", delay);
-      if (num_reqs > 50000) {
-	  printf("%f - %f\n", time_passed, get_ia_shape());
-	  num_reqs = 0;
-	  time_passed = 0;
-	  increment_ia_shape(-3);
-      } else {
-	      num_reqs += 1;
+      time_stats += delay;
+      time_period += delay;
+      time_init += delay;
+      time_now += delay;
+
+      /* IF AGENT */
+      if (time_stats > 3) { /* print stats every 3 seconds */
+	      double lambda = get_ia_lambda();
+	      long unsigned int nops = stats.gets + stats.sets;
+	      long unsigned int delta_nops = nops - prev_nops;
+	      double qps_now = delta_nops / time_stats;
+	      printf("%f %f %ld %f %f\n", time_now, lambda, delta_nops, qps_now, qps_now * 32 / 1000);
+	      time_stats = 0;
+	      qps_prev = qps_now;
+	      prev_nops = nops;
       }
+      if (time_init > 10) { /* double QPS after 10 seconds */
+	      double lambda = get_ia_lambda();
+	      set_ia_lambda(lambda * 2);
+	      time_init = -600; /* hack: set very low init time to avoid revisiting condition */
+      }
+      /* IF LEADER */
+//      if (time_stats > 3) { /* print stats every 3 seconds */
+//	      double lat_now = stats.get_nth(99);
+//	      printf("%f %f\n", time_now, lat_now);
+//	      time_stats = 0;
+//      }
+
+      /* YA */
 
       if (options.skip && options.lambda > 0.0 &&
           now - next_time > 0.005000 &&

@@ -41,11 +41,17 @@ public:
   options_t options;
 
   /* YA */
-  int num_reqs;
-  double time_passed;
+  double time_stats;
+  double time_period;
+  double time_init;
+  double time_now;
+  double qps_prev;
+  long unsigned int prev_nops;
+  double get_ia_lambda() { return ((GPareto *)iagen)->get_ia_lambda(); };
+  void set_ia_lambda(int val) {((GPareto *)iagen)->set_lambda(val); }
   double get_ia_shape() { return ((GPareto *)iagen)->get_shape(); };
   void increment_ia_shape(int val) { ((GPareto *)iagen)->increment_shape(val); }
-
+  /* YA */
 
   bool is_ready() { return read_state == IDLE; }
   void set_priority(int pri);
