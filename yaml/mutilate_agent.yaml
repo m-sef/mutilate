@@ -22,6 +22,13 @@ spec:
       labels:
         app: mutilate-agent
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: mutilate-agent
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: mutilate
         image: mutilate:latest
