@@ -36,6 +36,11 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 5556
+        command:
+        - '/bin/bash'
+        - '-c'
+        - >
+          sleep infinity
 ---
 apiVersion: v1
 kind: Service
