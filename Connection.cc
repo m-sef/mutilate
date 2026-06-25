@@ -23,11 +23,7 @@ Connection::Connection(struct event_base* _base, struct evdns_base* _evdns,
                        string _hostname, string _port, options_t _options,
                        bool sampling) :
   start_time(0), stats(sampling), options(_options),
-<<<<<<< HEAD
-  time_stats(0.0), time_period(0.0), time_init(0.0), time_now(0.0), qps_prev(0.0), prev_nops(0),
-=======
   time_stats(0.0), time_period(0.0), time_init(0.0), time_now(0.0), qps_prev(0.0),
->>>>>>> 1d59c116372354898d5e925d93b17b6d5ccf59a6
   hostname(_hostname), port(_port), base(_base), evdns(_evdns)
 {
   valuesize = createGenerator(options.valuesize);
