@@ -29,6 +29,10 @@ spec:
               matchLabels:
                 app: mutilate-agent
             topologyKey: kubernetes.io/hostname
+          - labelSelector:
+              matchLabels:
+                app: memcached
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: mutilate
         image: mutilate:latest
