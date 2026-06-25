@@ -7,3 +7,23 @@ kind: Namespace
 metadata:
   name: mutilate
 ---
+apiVersion: v1/apps
+kind: Deployment
+metadata:
+  name: mutilate-deployment
+  namespace: mutilate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mutilate
+    template:
+      metadata:
+        labels:
+          app: mutilate
+      spec:
+        containers:
+        - name: mutilate
+          image: mutilate
+          # The Mutilate Docker image MUST be built locally on all nodes
+          imagePullPolicy: never
