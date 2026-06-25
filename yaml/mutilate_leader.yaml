@@ -1,0 +1,9 @@
+#==============================================================================
+# Author(s): m-sef (https://github.com/m-sef)
+# Brief: Deploy mutilate leader as a single pod located on the master node
+#==============================================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mutilate
+---
