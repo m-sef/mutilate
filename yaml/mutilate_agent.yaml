@@ -1,9 +1,44 @@
 #==============================================================================
 # Author(s): m-sef (https://github.com/m-sef)
-# Brief: Deploy mutilate agent(s) as pod(s) which can not be colocated
+# Brief: Deploy mutilate agent(s) as pod(s) which can not be co-located
 #==============================================================================
 apiVersion: v1
 kind: Namespace
 metadata:
   name: mutilate
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mutilate-agent-deployment
+  namespace: mutilate
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mutilate-agent
+    template:
+      metadata:
+        labels:
+          app: mutilate-agent
+      spec:
+        containers:
+        - name: mutilate
+          image: mutilate:latest
+          # The Mutilate Docker image MUST be built locally on all nodes
+          imagePullPolicy: never
+          ports:
+          - containerPort: 5556
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mutilate-agent-service
+  namespace: mutilate
+spec:
+  selector:
+    app: mutilate-agent
+  ports:
+  - protocol: TCP
+    port: 5556
+    targetPort: 5556
