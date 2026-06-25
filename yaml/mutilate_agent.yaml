@@ -26,7 +26,7 @@ spec:
       - name: mutilate
         image: mutilate:latest
         # The Mutilate Docker image MUST be built locally on all nodes
-        imagePullPolicy: never
+        imagePullPolicy: Never
         ports:
         - containerPort: 5556
 ---
