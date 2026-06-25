@@ -28,3 +28,8 @@ spec:
         image: mutilate:latest
         # The Mutilate Docker image MUST be built locally on all nodes
         imagePullPolicy: Never
+        command:
+        - '/bin/bash'
+        - '-c'
+        - >
+          sleep infinity
