@@ -349,11 +349,13 @@ void Connection::drive_write_machine(double now) {
 	      qps_prev = qps_now;
 	      prev_nops = nops;
       }
-      if (time_init > 10) { /* double QPS after 10 seconds */
-	      double lambda = get_ia_lambda();
-	      set_ia_lambda(lambda * 2);
-	      time_init = -600; /* hack: set very low init time to avoid revisiting condition */
-      }
+      
+      // Waiter! Waiter! Stable QPS please! - m_sef
+      //if (time_init > 10) { /* double QPS after 10 seconds */
+	    //  double lambda = get_ia_lambda();
+	    //  set_ia_lambda(lambda * 2);
+	    //  time_init = -600; /* hack: set very low init time to avoid revisiting condition */
+      //}
 
       /* IF LEADER */
 //      if (time_stats > 3) { /* print stats every 3 seconds */
