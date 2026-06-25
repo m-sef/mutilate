@@ -13,6 +13,7 @@ metadata:
   name: mutilate-leader-deployment
   namespace: mutilate
 spec:
+  nodeName: master.slmoore-309005.bayopsys-pg0.wisc.cloudlab.us 
   replicas: 1
   selector:
     matchLabels:
