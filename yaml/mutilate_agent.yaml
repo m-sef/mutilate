@@ -4,7 +4,7 @@
 #
 # Each agent pod gets a stable, individually resolvable DNS name via the
 # headless service:
-#   mutilate-agent-{N}.mutilate-agent-headless.mutilate.svc.cluster.local
+#   mutilate-agent-{N}.mutilate-agent-service.mutilate.svc.cluster.local
 #
 # Agents reach memcached at:
 #   memcached-service.memcached.svc.cluster.local:11211
