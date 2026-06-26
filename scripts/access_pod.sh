@@ -4,6 +4,6 @@
 NAMESPACE=$1
 POD=$2
 
-sudo kubectl exec -n $NAMESPACE $POD -it -- /bin/sh
+sudo kubectl exec -n $NAMESPACE $POD -it -- /bin/bash
 
 exit 0;
