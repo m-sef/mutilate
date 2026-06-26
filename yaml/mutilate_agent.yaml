@@ -67,4 +67,4 @@ spec:
         - '/bin/bash'
         - '-c'
         - >
-          sleep infinity
+          ./mutilate --agentmode --threads=20
