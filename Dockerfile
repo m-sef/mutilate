@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS mutilate-build
 
 WORKDIR /mutilate
 
@@ -7,11 +7,14 @@ COPY . .
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     build-essential \
     scons \
-    libevent-dev \
     gengetopt \
-    libzmq3-dev \
     python2.7 \
     wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    libevent-dev \
+    libzmq3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget -P ~/.local/lib --no-check-certificate https://bootstrap.pypa.io/pip/2.7/get-pip.py \
@@ -20,3 +23,16 @@ RUN wget -P ~/.local/lib --no-check-certificate https://bootstrap.pypa.io/pip/2.
 RUN python2.7 -m pip install --user scons
 
 RUN python2.7 ~/.local/bin/scons
+
+FROM ubuntu:22.04
+
+WORKDIR /mutilate
+
+COPY --from=mutilate-build /mutilate/mutilate .
+COPY --from=mutilate-build /mutilate/COPYING .
+COPY scripts/ scripts/
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    libevent-dev \
+    libzmq3-dev \
+    && rm -rf /var/lib/apt/lists/*
