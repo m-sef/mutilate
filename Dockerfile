@@ -28,7 +28,7 @@ FROM ubuntu:22.04
 
 WORKDIR /mutilate
 
-COPY --from=mutilate-build /mutilate/mutilate .
+COPY --from=mutilate-build /mutilate/mutilate /usr/bin/
 COPY --from=mutilate-build /mutilate/COPYING .
 COPY scripts/ scripts/
 
