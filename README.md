@@ -6,23 +6,24 @@ This fork of Mutilate is focused on the following:
 
 * Creating a Docker image so that Mutilate can be deployed consistently across different systems
 * Providing Kubernetes manifests for deploying Mutilate on a Kubernetes cluster; benchmarking Memcached deployed via Kubernetes
-* Reorganizing the file structure, and (potentially, eventually) substituting the outdated SConstruct build system for CMake
+* Reorganizing the file structure, and possibly substituting the outdated SConstruct build system for CMake
 
-## Setup
+## Docker Setup
 
 ```bash
 # Downloading and installing Docker
 sudo apt-get update -y && sudo apt-get upgrade -y
 sudo apt-get install -y docker.io
-```
 
-```bash
 # Building the Docker image
 sudo docker build -t mutilate .
+```
 
-# Making the Docker image available to Kubernetes (Must be done on ALL nodes)
-sudo docker save -o mutilate.tar mutilate:latest
-sudo ctr -n=k8s.io images import mutilate.tar
+## Kubernetes Setup
+
+```bash
+# Create 2 mutilate agents and 1 mutilate leader
+sudo kubectl apply -Rf yaml/
 ```
 
 ## Usage
