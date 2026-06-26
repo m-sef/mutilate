@@ -2,9 +2,8 @@
 
 run_benchmark() {
     sudo kubectl apply -Rf yaml/
-    sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s &
-    sudo kubectl wait --for=condition=Ready pod --all -n mutilate --timeout=120s &
-    wait
+    sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s
+    sudo kubectl wait --for=condition=Ready pod --all -n mutilate --timeout=120s
 
     sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh $1 $2
 
