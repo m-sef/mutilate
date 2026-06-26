@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+run_benchmark() {
+    sudo kubectl apply -Rf yaml/
+    sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s &
+    sudo kubectl wait --for=condition=Ready pod --all -n mutilate --timeout=120s &
+    wait
+
+    sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh 0.25 800000
+
+    sudo kubectl delete -Rf yaml/
+}
+
+run_benchmark 0.25 20000
+
+#for i in 20000 40000 60000 80000 100000 120000 140000 160000 180000 200000 220000 240000 260000 280000 300000 320000 340000 360000 380000 400000; do
+#    run_benchmark 0.25 $i
+#    sleep 1
+#done
+
+exit 0
