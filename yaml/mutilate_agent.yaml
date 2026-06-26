@@ -1,18 +1,42 @@
 #==============================================================================
 # Author(s): m-sef (https://github.com/m-sef)
 # Brief: Deploy mutilate agent(s) as pod(s) which can not be co-located
+#
+# Each agent pod gets a stable, individually resolvable DNS name via the
+# headless service:
+#   mutilate-agent-{N}.mutilate-agent-headless.mutilate.svc.cluster.local
+#
+# Agents reach memcached at:
+#   memcached-service.memcached.svc.cluster.local:11211
 #==============================================================================
 apiVersion: v1
 kind: Namespace
 metadata:
   name: mutilate
 ---
-apiVersion: apps/v1
-kind: Deployment
+# Headless service: gives each StatefulSet pod a unique, resolvable DNS name.
+# clusterIP: None means no VIP is assigned — DNS resolves directly to pod IPs.
+apiVersion: v1
+kind: Service
 metadata:
-  name: mutilate-agent-deployment
+  name: mutilate-agent-headless
   namespace: mutilate
 spec:
+  clusterIP: None
+  selector:
+    app: mutilate-agent
+  ports:
+  - protocol: TCP
+    port: 5556
+    targetPort: 5556
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mutilate-agent
+  namespace: mutilate
+spec:
+  serviceName: mutilate-agent-headless
   replicas: 2
   selector:
     matchLabels:
@@ -45,16 +69,3 @@ spec:
         - '-c'
         - >
           sleep infinity
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mutilate-agent-service
-  namespace: mutilate
-spec:
-  selector:
-    app: mutilate-agent
-  ports:
-  - protocol: TCP
-    port: 5556
-    targetPort: 5556
