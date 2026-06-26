@@ -6,7 +6,7 @@ run_benchmark() {
 
     sudo kubectl apply -Rf yaml/
     sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s
-    sudo kubectl wait --for=condition=Ready pod --all -n mutilate --timeout=120s
+    sudo kubectl wait --for=condition=Ready pod/mutilate-agent-0 pod/mutilate-agent-1 -n mutilate --timeout=120s
 
     sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh $1 $2 >> benchmark/$UPDATE\_$QPS.log
 
