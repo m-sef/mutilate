@@ -6,7 +6,7 @@ run_benchmark() {
     sudo kubectl wait --for=condition=Ready pod --all -n mutilate --timeout=120s &
     wait
 
-    sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh 0.25 800000
+    sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh $1 $2
 
     sudo kubectl delete -Rf yaml/
 }
