@@ -1,89 +1,31 @@
-Mutilate [![Build Status](https://img.shields.io/travis/dterei/mutilate.svg?style=flat)](https://travis-ci.org/dterei/mutilate)
-========
+# mutilate
 
-Mutilate is a memcached load generator designed for high request
-rates, good tail-latency measurements, and realistic request stream
-generation.
+Mutilate is a memcached load generator designed for high request rates, good tail-latency measurements, and realistic request stream generation.
 
-Requirements
-============
+This fork of Mutilate is focused on the following:
 
-1. A C++0x compiler
-2. scons
-3. libevent
-4. gengetopt
-5. zeromq (optional)
+* Creating a Docker image so that Mutilate can be deployed consistently across different systems
+* Providing Kubernetes manifests for deploying Mutilate on a Kubernetes cluster; benchmarking Memcached deployed via Kubernetes
+* Reorganizing the file structure, and (potentially, eventually) substituting the outdated SConstruct build system for CMake
 
-Mutilate has only been thoroughly tested on Ubuntu 11.10.  We'll flesh
-out compatibility over time.
+## Setup
 
-Building
-========
+```bash
+# Downloading and installing Docker
+sudo apt-get update -y && sudo apt-get upgrade -y
+sudo apt-get install -y docker.io
+```
 
-    apt-get install scons libevent-dev gengetopt libzmq-dev
-    scons
+```bash
+# Building the Docker image
+sudo docker build -t mutilate .
 
-Building for Ubuntu 22.04
-=========================
-Versioning issues will be encountered when building mutilate on Ubuntu-22.04.
-Requirements are almost identical: 
-1. A C++0x compiler        --> no change
-2. scons                   --> need scons version 3.1.2
-3. libevent                --> no change
-4. gengetopt               --> no change
-5. zeromq (optional)       --> Ubuntu-22.04 packages provide zeromq version 3
+# Making the Docker image available to Kubernetes (Must be done on ALL nodes)
+sudo docker save -o mutilate.tar mutilate:latest
+sudo ctr -n=k8s.io images import mutilate.tar
+```
 
-Start by updating and upgrading the system to reflect current package repositories:
-
-    $ sudo apt update && sudo apt upgrade -y
-
-Use ubuntu package manager to install requirements that do not 
-exhibit versioning issues:
-
-    $ sudo apt install libevent-dev gengetopt libzmq3-dev
-
-Mutilate build requires python2.7 to proceed successfully. For that reason,
-the scons package used to build mutilate must be compatible with python2.7.
-
-1. Confirm that python2.7 is installed; install otherwise:
-
-        $ which python2.7
-        $ sudo apt install python2.7
-   
-2. Now, install a version of pip compatible with python2.7:
-
-        $ wget -P ~/.local/lib https://bootstrap.pypa.io/pip/2.7/get-pip.py
-        $ python2.7 ~/.local/lib/get-pip.py --user
-
-   The first command downloads the get_pip.py module compatible with python2.7
-   and installs it locally in ~/.local/lib.
-   The second command uses python2.7 to execute get_pip.py and install pip
-   locally for the user (versus globally for the system) in ~/.local/bin.
-   (Because this version of pip conflicts with the default one in
-    Ubuntu-22.04, it is best to install it locally.)
-
-3. Use python2.7 and compatible pip to install a compatible scons package:
-
-        $ python2.7 -m pip install --user scons
-
-   This command uses pip to install the newest scons version that is
-   compatible with python2.7; this is scons-3.1.2.
-   The install is done locally with destination ~/.local/bin.
-   (Because this version of scons conflicts with the default one in
-    Ubuntu-22.04, it is best to install it locally.)
-
-With all the requirements now satisfied, we can build mutilate using scons:
-
-    $ cd mutilate
-    $ python2.7 ~/.local/bin/scons
-
-Check that mutilate executes:
-
-    $ ./mutilate --help
-
-
-Basic Usage
-===========
+## Usage
 
 Type './mutilate -h' for a full list of command-line options.  At
 minimum, a server must be specified.
@@ -122,8 +64,7 @@ remote agents.
     RX  393609073 bytes :   75.1 MB/s
     TX   57374136 bytes :   10.9 MB/s
 
-Suggested Usage
-===============
+## Suggested Usage
 
 Real deployments of memcached often handle the requests of dozens,
 hundreds, or thousands of front-end clients simultaneously.  However,
@@ -173,8 +114,7 @@ per memcached server thread.  This ought to be enough outstanding
 requests to cause server-side queuing delay, and no possibility of
 client-side queuing delay adulterating the latency measurements.
 
-Command-line Options
-====================
+### Command-line Options
 
     mutilate3 0.1
     
@@ -282,4 +222,3 @@ Command-line Options
     
     [1] Berk Atikoglu et al., Workload Analysis of a Large-Scale Key-Value Store,
         SIGMETRICS 2012
-    
