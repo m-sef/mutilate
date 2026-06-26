@@ -8,11 +8,12 @@ metadata:
   name: mutilate
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: mutilate-leader-deployment
+  name: mutilate-leader
   namespace: mutilate
 spec:
+  serviceName: mutilate-leader-service
   replicas: 1
   selector:
     matchLabels:
@@ -32,3 +33,13 @@ spec:
         - '-c'
         - >
           sleep infinity
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mutilate-leader-service
+  namespace: mutilate
+spec:
+  clusterIP: None
+  selector:
+    app: mutilate-leader

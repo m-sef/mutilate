@@ -14,29 +14,13 @@ kind: Namespace
 metadata:
   name: mutilate
 ---
-# Headless service: gives each StatefulSet pod a unique, resolvable DNS name.
-# clusterIP: None means no VIP is assigned, DNS resolves directly to pod IPs.
-apiVersion: v1
-kind: Service
-metadata:
-  name: mutilate-agent-headless
-  namespace: mutilate
-spec:
-  clusterIP: None
-  selector:
-    app: mutilate-agent
-  ports:
-  - protocol: TCP
-    port: 5556
-    targetPort: 5556
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mutilate-agent
   namespace: mutilate
 spec:
-  serviceName: mutilate-agent-headless
+  serviceName: mutilate-agent-service
   replicas: 2
   selector:
     matchLabels:
@@ -68,3 +52,19 @@ spec:
         - '-c'
         - >
           ./mutilate --agentmode --threads=20
+---
+# Headless service: gives each StatefulSet pod a unique, resolvable DNS name.
+# clusterIP: None means no VIP is assigned, DNS resolves directly to pod IPs.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mutilate-agent-service
+  namespace: mutilate
+spec:
+  clusterIP: None
+  selector:
+    app: mutilate-agent
+  ports:
+  - protocol: TCP
+    port: 5556
+    targetPort: 5556
