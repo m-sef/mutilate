@@ -25,9 +25,8 @@ spec:
       nodeName: master.slmoore-309005.bayopsys-pg0.wisc.cloudlab.us 
       containers:
       - name: mutilate
-        image: mutilate:latest
-        # The Mutilate Docker image MUST be built locally on all nodes
-        imagePullPolicy: Never
+        image: ghcr.io/m-sef/mutilate:latest
+        imagePullPolicy: Always
         command:
         - '/bin/bash'
         - '-c'
