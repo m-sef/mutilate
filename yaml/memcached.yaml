@@ -1,0 +1,67 @@
+#==============================================================================
+# Author(s): m-sef (https://github.com/m-sef)
+# Brief: Simple memcached deployment
+#==============================================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: memcached
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memcached-deployment
+  namespace: memcached
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memcached
+  template:
+    metadata:
+      labels:
+        app: memcached
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: mutilate-agent
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: memcached
+        image: memcached:1.6-alpine
+        resources:
+          requests:
+            cpu: "19.9"
+            memory: "64Gi"
+          limits:
+            cpu: "19.9"
+            memory: "64Gi"
+        ports:
+        - containerPort: 11211
+        args: [
+          "-t", "20",
+          "-m", "32G",
+          "-c", "8192",
+          "-b", "8192",
+          "-p", "11211",
+          "-u", "nobody",
+          "-B", "binary",
+        ]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: memcached-service
+  namespace: memcached
+spec:
+  type: NodePort
+  selector:
+    app: memcached
+  ports:
+  - protocol: TCP
+    port: 11211
+    targetPort: 11211
+    nodePort: 30000
