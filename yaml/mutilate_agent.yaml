@@ -47,6 +47,13 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 5556
+        resources:
+          requests:
+            cpu: "19.9"
+            memory: "64Gi"
+          limits:
+            cpu: "19.9"
+            memory: "64Gi"
         command:
         - '/bin/bash'
         - '-c'
