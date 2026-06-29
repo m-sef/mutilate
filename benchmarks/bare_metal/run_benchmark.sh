@@ -3,6 +3,7 @@
 #            Seth Moore (https://github.com/m-sef)
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+TEMP_DIR=exp
 
 PORT=11211
 SERVER=10.10.1.1
@@ -25,24 +26,25 @@ run_experiment() {
         UPDATE=$1
         QPS=$2
 
-        echo "START RUN UPDATE $UPDATE QPS $QPS"
-        mkdir -p $SCRIPT_DIR/exp/$UPDATE\_$QPS/
+        echo "Benchmarking update=$UPDATE qps=$QPS"
+        mkdir -p $SCRIPT_DIR/$TEMP_DIR/$UPDATE\_$QPS/
 
         # start load generation for 1 mcd process
-        taskset -c 0 mutilate --binary -s $SERVER:$PORT --noload --agent={$AGENT1,$AGENT2} --threads=1 --keysize=fb_key --valuesize=fb_value --iadist=fb_ia --update=$UPDATE --depth=128 --measure_connections=32 --qps=$QPS --time=30 >> $SCRIPT_DIR/exp/$UPDATE\_$QPS/leader.log
+        taskset -c 0 mutilate --binary -s $SERVER:$PORT --noload --agent={$AGENT1,$AGENT2} --threads=1 --keysize=fb_key --valuesize=fb_value --iadist=fb_ia --update=$UPDATE --depth=128 --measure_connections=32 --qps=$QPS --time=30 >> $SCRIPT_DIR/$TEMP_DIR/$UPDATE\_$QPS/leader.log
 
-        scp -r $AGENT1:~/agent.log $SCRIPT_DIR/exp/$UPDATE\_$QPS/agent1.log
-        scp -r $AGENT2:~/agent.log $SCRIPT_DIR/exp/$UPDATE\_$QPS/agent2.log
         ssh $AGENT1 "sudo killall mutilate"
         ssh $AGENT2 "sudo killall mutilate"
         ssh $SERVER "sudo killall memcached"
 }
 
-echo "CREATE TEMP EXP DIR"
-mkdir -p exp/
-rm -rf exp/*
+echo "Creating temporary directory '$TEMP_DIR/'"
+mkdir -p $SCRIPT_DIR/$TEMP_DIR/
 
 for i in 20000 40000 60000 80000 100000 120000 140000 160000 180000 200000 220000 240000 260000 280000 300000 320000 340000 360000 380000 400000; do
         run_experiment 0.25 $i
         sleep 1
 done
+
+echo "Compressing temporary directory '$TEMP_DIR/' into '$TEMP_DIR.tar.gz'"
+tar -cvzf $SCRIPT_DIR/$TEMP_DIR.tar.gz $SCRIPT_DIR/$TEMP_DIR
+rm -rf $SCRIPT_DIR/$TEMP_DIR
