@@ -30,6 +30,8 @@ spec:
       labels:
         app: mutilate-agent
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
