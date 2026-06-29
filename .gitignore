@@ -1,12 +1,12 @@
 *~
 *.[oda]
 .scon*
-config.log
-gmon.out
-mutilate
-cmdline.cc
-cmdline.h
-gtest
-config.h
+/config.log
+/gmon.out
+/mutilate
+/src/cmdline.cc
+/include/cmdline.h
+/gtest
+/include/config.h
 *.tar
-.venv
+/.venv

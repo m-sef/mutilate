@@ -1,12 +1,3 @@
-#==============================================================================
-# Author(s): Seth Moore (https://github.com/m-sef)
-# Deploy mutilate leader as a single pod located on the master node
-#==============================================================================
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: mutilate
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -33,13 +24,3 @@ spec:
         - '-c'
         - >
           sleep infinity
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mutilate-leader-service
-  namespace: mutilate
-spec:
-  clusterIP: None
-  selector:
-    app: mutilate-leader
