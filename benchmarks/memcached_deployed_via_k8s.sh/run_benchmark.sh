@@ -10,7 +10,6 @@ AGENT2=10.10.1.3
 
 run_experiment() {
         echo "START MEMCACHED 16 THREADS"
-        #ssh $SERVER "taskset -c 0-15 memcached -p $PORT -u nobody -t 16 -m 32G -c 8192 -b 8192 -l $SERVER -B binary > mcd_11211.log 2>&1 < /dev/null &"
         sudo kubectl apply -f $SCRIPT_DIR/../../yaml/memcached.yaml
         sudo kubectl wait --for=condition=Ready pod -l app=memcached -n memcached --timeout=120s
 

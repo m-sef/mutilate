@@ -11,11 +11,11 @@ AGENT2=10.10.1.3
 
 run_experiment() {
         echo "START MEMCACHED 16 THREADS"
-        ssh $SERVER "taskset -c 0-15 memcached -p $PORT -u nobody -t 20 -m 32G -c 8192 -b 8192 -l $SERVER -B binary > mcd_11211.log 2>&1 < /dev/null &"
+        ssh $SERVER "taskset -c 0-15 memcached -p $PORT -u nobody -t 16 -m 32G -c 8192 -b 8192 -l $SERVER -B binary > mcd_11211.log 2>&1 < /dev/null &"
 
         echo "START LOAD GENERATION AGENTS"
-        ssh $AGENT1 "mutilate --agentmode --threads=20 > agent.log 2>&1 < /dev/null &"
-        ssh $AGENT2 "mutilate --agentmode --threads=20 > agent.log 2>&1 < /dev/null &"
+        ssh $AGENT1 "mutilate --agentmode --threads=16 > agent.log 2>&1 < /dev/null &"
+        ssh $AGENT2 "mutilate --agentmode --threads=16 > agent.log 2>&1 < /dev/null &"
 
         echo "LOAD MEMCACHED DATABASE"
         taskset -c 0 mutilate -vv --binary -s $SERVER:$PORT --loadonly -K fb_key -V fb_value

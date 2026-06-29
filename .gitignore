@@ -9,3 +9,4 @@ cmdline.h
 gtest
 config.h
 *.tar
+.venv
