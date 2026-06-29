@@ -16,7 +16,7 @@ run_benchmark() {
 
     sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh $1 $2 >> exp/$UPDATE\_$QPS.log
 
-    sudo kubectl delete -Rf yaml/
+    sudo kubectl delete -Rf $SCRIPT_DIR/../../yaml/
 }
 
 echo "CREATE TEMP EXP DIR"
