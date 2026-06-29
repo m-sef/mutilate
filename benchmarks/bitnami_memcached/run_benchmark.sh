@@ -8,6 +8,8 @@ run_benchmark() {
     UPDATE=$1
     QPS=$2
 
+    # TODO - Fix later, currently proof of concept
+    sudo /local/mutilate/scripts/install_bitnami_memcached.yaml
     sudo kubectl apply -f $SCRIPT_DIR/../../yaml/mutilate_agent.yaml
     sudo kubectl apply -f $SCRIPT_DIR/../../yaml/mutilate_leader.yaml
     sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s
