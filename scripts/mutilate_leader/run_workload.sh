@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Author(s): m-sef (https://github.com/m-sef)
+# Author(s): Seth Moore (https://github.com/m-sef)
 # Meant to be called in running pod via kubectl exec
 
 resolve_memcached_domain_name_to_ip() {

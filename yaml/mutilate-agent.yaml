@@ -1,6 +1,6 @@
 #==============================================================================
-# Author(s): m-sef (https://github.com/m-sef)
-# Brief: Deploy mutilate agent(s) as pod(s) which can not be co-located
+# Author(s): Seth Moore (https://github.com/m-sef)
+# Deploy mutilate agent(s) as pod(s) which can not be co-located
 #
 # Each agent pod gets a stable, individually resolvable DNS name via the
 # headless service:

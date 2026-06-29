@@ -1,6 +1,6 @@
 #==============================================================================
-# Author(s): m-sef (https://github.com/m-sef)
-# Brief: Simple memcached deployment
+# Author(s): Seth Moore (https://github.com/m-sef)
+# Simple memcached deployment
 #==============================================================================
 apiVersion: v1
 kind: Namespace

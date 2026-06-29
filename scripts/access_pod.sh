@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Author(s): Author(s): m-sef (https://github.com/m-sef)
+# Author(s): Seth Moore (https://github.com/m-sef)
 
 NAMESPACE=$1
 POD=$2

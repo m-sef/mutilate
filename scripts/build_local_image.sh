@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Author(s): m-sef (https://github.com/m-sef)
-# WARNING - Relies on deprecated tools!
+# Author(s): Seth Moore (https://github.com/m-sef)
+# WARNING - Relies on deprecated tools! Workaround for making Docker image available to Kubernetes
 
 sudo docker build -t mutilate .
 sudo docker save -o mutilate.tar mutilate:latest
