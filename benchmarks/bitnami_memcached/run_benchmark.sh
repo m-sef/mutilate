@@ -31,7 +31,7 @@ run_benchmark() {
 echo "Creating temporary directory '$TEMP_DIR/'"
 mkdir -p $SCRIPT_DIR/$TEMP_DIR/
 
-for i in 20000 40000 60000 80000 100000; do
+for i in 20000 40000 60000 80000 100000 120000 140000 160000 180000 200000 220000 240000 260000 280000 300000 320000 340000 360000 380000 400000; do
     run_benchmark 0.25 $i
     sleep 1
 done
