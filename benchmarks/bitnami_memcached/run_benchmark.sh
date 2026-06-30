@@ -9,7 +9,7 @@ run_benchmark() {
     QPS=$2
 
     # TODO - Fix later, currently proof of concept
-    sudo helm install my-release /local/memcached-chart/memcached \
+    sudo helm install my-release /local/memcached-chart \
         --namespace memcached --create-namespace \
         --set architecture="high-availability" \
         --set replicaCount=2
