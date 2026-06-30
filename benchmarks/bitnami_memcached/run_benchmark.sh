@@ -21,7 +21,11 @@ run_benchmark() {
 
     sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh $1 $2 >> $SCRIPT_DIR/$TEMP_DIR/$UPDATE\_$QPS/leader.log
 
-    sudo kubectl delete -Rf $SCRIPT_DIR/../../yaml/
+    sudo kubectl delete -f $SCRIPT_DIR/../../yaml/mutilate-agent.yaml
+    sudo kubectl delete -f $SCRIPT_DIR/../../yaml/mutilate-leader.yaml
+    sudo kubectl delete namespace memcached 
+    sudo kubectl wait --for=delete pod --all -n mutilate --timeout=120s
+    sudo kubectl wait --for=delete pod --all -n memcached --timeout=120s
 }
 
 echo "Creating temporary directory '$TEMP_DIR/'"
