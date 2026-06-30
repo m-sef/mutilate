@@ -9,7 +9,11 @@ run_benchmark() {
     QPS=$2
 
     # TODO - Fix later, currently proof of concept
-    sudo helm install my-release /local/memcached-chart/memcached --namespace memcached --create-namespace
+    sudo helm install my-release /local/memcached-chart/memcached \
+        --namespace memcached --create-namespace \
+        --set architecture="high-availability" \
+        --set autoscaling.enabled="true" \
+        --set autoscaling.maxReplicas=5
     sudo kubectl apply -f $SCRIPT_DIR/../../yaml/mutilate-agent.yaml
     sudo kubectl apply -f $SCRIPT_DIR/../../yaml/mutilate-leader.yaml
     sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s
