@@ -24,7 +24,7 @@ spec:
         app: mutilate-leader
     spec:
       nodeSelector:
-        kubernetes.io/hostname: master
+        kubernetes.io/hostname: "master"
       containers:
       - name: mutilate
         image: ghcr.io/m-sef/mutilate:latest
