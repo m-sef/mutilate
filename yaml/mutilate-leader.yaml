@@ -23,7 +23,11 @@ spec:
       labels:
         app: mutilate-leader
     spec:
-      nodeName: master.slmoore-309005.bayopsys-pg0.wisc.cloudlab.us 
+      nodeName: master.slmoore-309005.bayopsys-pg0.wisc.cloudlab.us
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: mutilate
         image: ghcr.io/m-sef/mutilate:latest
