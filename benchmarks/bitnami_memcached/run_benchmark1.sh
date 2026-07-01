@@ -20,7 +20,7 @@ run_benchmark() {
     echo "Benchmarking update=$UPDATE qps=$QPS"
     mkdir -p $SCRIPT_DIR/$TEMP_DIR/$UPDATE\_$QPS/
 
-    sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/modified_run_workload.sh $1 $2 1 >> $SCRIPT_DIR/$TEMP_DIR/$UPDATE\_$QPS/leader.log
+    sudo kubectl exec -n mutilate mutilate-leader-0 -- ./scripts/mutilate_leader/run_workload.sh $1 $2 >> $SCRIPT_DIR/$TEMP_DIR/$UPDATE\_$QPS/leader.log
 
     sudo kubectl delete -f $SCRIPT_DIR/../../yaml/mutilate-agent.yaml
     sudo kubectl delete -f $SCRIPT_DIR/../../yaml/mutilate-leader.yaml
