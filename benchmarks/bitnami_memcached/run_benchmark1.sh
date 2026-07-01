@@ -10,7 +10,7 @@ run_benchmark() {
 
     # TODO - Fix later, currently proof of concept
     sudo helm install my-release /local/memcached-chart \
-        --namespace memcached --create-namespace \
+        --namespace memcached --create-namespace
     sudo kubectl apply -f $SCRIPT_DIR/../../yaml/mutilate-agent.yaml
     sudo kubectl apply -f $SCRIPT_DIR/../../yaml/mutilate-leader.yaml
     sudo kubectl wait --for=condition=Ready pod --all -n memcached --timeout=120s
